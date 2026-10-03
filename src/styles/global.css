@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   CyberWar Tool Directory — design tokens
+   Source of truth: README.md → "🎨 Design System"
+   Visual language: dark + technical, but not "edgy hacker".
+   ===================================================================== */
+@theme {
+  /* Backgrounds */
+  --color-background: #070b12; /* Main     */
+  --color-surface: #0c121c; /* Surface  */
+  --color-card: #101925; /* Card     */
+  --color-elevated: #151f2d; /* Elevated */
+
+  /* Borders */
+  --color-border: #1d2a3a; /* Subtle */
+
+  /* Text */
+  --color-foreground: #f1f5f9; /* Primary   */
+  --color-muted: #94a3b8; /* Secondary */
+  --color-subtle: #64748b; /* Muted     */
+
+  /* Accents */
+  --color-accent: #38bdf8; /* Primary — cyan / blue */
+  --color-accent-cyan: #22d3ee;
+  --color-success: #22c55e; /* Success — green */
+  --color-warning: #f59e0b; /* Warning — amber */
+  --color-danger: #ef4444; /* Danger  — red   */
+  --color-osint: #2dd4bf; /* OSINT   — teal  */
+  --color-osint-violet: #a78bfa; /* OSINT   — purple */
+
+  /* Typography */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  }
+}
+
+@layer components {
+  /* Accessible "skip to content" link: hidden until it receives focus. */
+  .skip-link {
+    position: absolute;
+    inset-inline-start: 0.75rem;
+    inset-block-start: -4rem;
+    z-index: 100;
+    border-radius: 0.5rem;
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: inset-block-start 150ms ease;
+  }
+
+  .skip-link:focus {
+    inset-block-start: 0.75rem;
+  }
+
+  /* Native <details> accordion used by the navigation drawer and sidebar. */
+  .disclosure > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .disclosure > summary .disclosure-icon {
+    transition: transform 150ms ease;
+  }
+
+  .disclosure[open] > summary .disclosure-icon {
+    transform: rotate(180deg);
+  }
+}
+
+@layer utilities {
+  /* Per-card accent hook: set --cat-accent inline to colour a category. */
+  .cat-accent {
+    color: var(--cat-accent, var(--color-accent));
+  }
+
+  .cat-accent-bg {
+    background-color: color-mix(in oklab, var(--cat-accent, var(--color-accent)) 14%, transparent);
+  }
+
+  .cat-accent-border {
+    border-color: color-mix(in oklab, var(--cat-accent, var(--color-accent)) 35%, transparent);
+  }
+}
