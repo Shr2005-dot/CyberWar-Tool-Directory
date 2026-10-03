@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  site,
+  stats,
+  categories,
+  popularTools,
+  learningPaths,
+  recentlyUpdated,
+} from '../data/site';
+---
+
+<BaseLayout title="Cybersecurity tools, commands and knowledge">
+  <!-- Hero (README → "🏠 Homepage Architecture" › HERO) -->
+  <section class="py-10 sm:py-14 lg:py-16">
+    <div class="mx-auto max-w-3xl text-center">
+      <h1
+        class="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl"
+      >
+        Cybersecurity Tools.<br class="hidden sm:block" />
+        <span class="text-accent">Commands.</span> Knowledge.
+      </h1>
+      <p
+        class="mx-auto mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:text-lg"
+      >
+        {site.taglineDetail} For OSINT, pentesting, networking, forensics and
+        more.
+      </p>
+
+      <form
+        role="search"
+        action="/tools"
+        method="get"
+        class="mx-auto mt-8 flex max-w-xl items-center gap-2"
+      >
+        <div class="relative flex-1">
+          <label for="hero-search" class="sr-only">
+            Search tools, commands and topics
+          </label>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-subtle"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-3.5-3.5"></path>
+          </svg>
+          <input
+            id="hero-search"
+            data-search-input
+            type="search"
+            name="q"
+            placeholder="Search tools, commands…"
+            autocomplete="off"
+            class="h-12 w-full rounded-xl border border-border bg-surface pl-11 pr-16 text-sm text-foreground transition placeholder:text-subtle focus:border-accent focus:outline-none"
+          />
+          <kbd
+            class="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border bg-elevated px-1.5 py-0.5 font-mono text-[0.6875rem] text-subtle sm:block"
+          >
+            Ctrl K
+          </kbd>
+        </div>
+        <button
+          type="submit"
+          class="h-12 shrink-0 rounded-xl bg-accent px-5 text-sm font-semibold text-background transition hover:brightness-110"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Quick stats (README → QUICK STATS) -->
+  <section aria-label="Directory at a glance" class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    {
+      stats.map((stat) => (
+        <div class="rounded-xl border border-border bg-card p-4 sm:p-5">
+          <div class="text-2xl font-semibold tracking-tight text-foreground">
+            {stat.value}
+          </div>
+          <div class="mt-1 text-sm text-subtle">{stat.label}</div>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- Explore categories (README → EXPLORE CATEGORIES) -->
+  <section aria-labelledby="categories-heading" class="mt-16">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <h2
+          id="categories-heading"
+          class="text-xl font-semibold tracking-tight text-foreground"
+        >
+          Explore categories
+        </h2>
+        <p class="mt-1 text-sm text-muted">
+          Browse the directory by area of practice.
+        </p>
+      </div>
+      <a
+        href="/tools"
+        class="hidden shrink-0 text-sm font-medium text-accent transition hover:underline sm:inline-block"
+      >
+        View all tools →
+      </a>
+    </div>
+
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        categories.map((category) => (
+          <li>
+            <a
+              href={`/tools/${category.slug}`}
+              style={`--cat-accent:${category.accent}`}
+              class="cat-accent-border flex h-full flex-col rounded-xl border bg-card p-4 transition hover:bg-elevated"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="cat-accent cat-accent-bg inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg"
+                  aria-hidden="true"
+                >
+                  {category.glyph}
+                </span>
+                <h3 class="text-sm font-semibold text-foreground">
+                  {category.name}
+                </h3>
+              </div>
+              <p class="mt-3 flex-1 text-sm text-muted">
+                {category.description}
+              </p>
+              <p class="mt-3 text-xs text-subtle">
+                {category.subcategories.length} topics
+              </p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Popular tools (README → POPULAR TOOLS) -->
+  <section aria-labelledby="popular-heading" class="mt-16">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <h2
+          id="popular-heading"
+          class="text-xl font-semibold tracking-tight text-foreground"
+        >
+          Popular tools
+        </h2>
+        <p class="mt-1 text-sm text-muted">
+          Frequently referenced across the directory.
+        </p>
+      </div>
+      <a
+        href="/tools"
+        class="shrink-0 text-sm font-medium text-accent transition hover:underline"
+      >
+        View all →
+      </a>
+    </div>
+
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        popularTools.map((tool) => (
+          <li>
+            <a
+              href={`/tools?q=${encodeURIComponent(tool.name)}`}
+              class="flex h-full items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-accent/40 hover:bg-elevated"
+            >
+              <span
+                class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-elevated font-mono text-xs text-accent"
+                aria-hidden="true"
+              >
+                {tool.name.slice(0, 2)}
+              </span>
+              <span class="min-w-0">
+                <span class="block text-sm font-semibold text-foreground">
+                  {tool.name}
+                </span>
+                <span class="mt-0.5 block text-xs text-subtle">
+                  {tool.summary}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Recently updated (README → RECENTLY UPDATED) -->
+  <section aria-labelledby="recent-heading" class="mt-16">
+    <div class="mb-6">
+      <h2
+        id="recent-heading"
+        class="text-xl font-semibold tracking-tight text-foreground"
+      >
+        Recently updated
+      </h2>
+      <p class="mt-1 text-sm text-muted">
+        New and refreshed entries appear here.
+      </p>
+    </div>
+
+    <ul class="grid gap-3 sm:grid-cols-3">
+      {
+        recentlyUpdated.map((tool) => (
+          <li>
+            <a
+              href={`/tools?q=${encodeURIComponent(tool.name)}`}
+              class="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 transition hover:border-accent/40 hover:bg-elevated"
+            >
+              <span
+                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-elevated font-mono text-xs text-accent"
+                aria-hidden="true"
+              >
+                {tool.name.slice(0, 2)}
+              </span>
+              <span class="text-sm font-medium text-foreground">
+                {tool.name}
+              </span>
+              <span class="ml-auto text-xs text-subtle" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Learning paths (README → LEARNING PATHS) -->
+  <section aria-labelledby="paths-heading" class="mt-16">
+    <div class="mb-6">
+      <h2
+        id="paths-heading"
+        class="text-xl font-semibold tracking-tight text-foreground"
+      >
+        Learning paths
+      </h2>
+      <p class="mt-1 text-sm text-muted">
+        Structured roadmaps that go from foundations to specialisation.
+      </p>
+    </div>
+
+    <ul class="grid gap-3 sm:grid-cols-2">
+      {
+        learningPaths.map((path) => (
+          <li>
+            <a
+              href="/roadmaps"
+              style={`--cat-accent:${path.accent}`}
+              class="cat-accent-border flex h-full flex-col rounded-xl border bg-card p-4 transition hover:bg-elevated"
+            >
+              <div class="flex items-center justify-between gap-3">
+                <h3 class="text-sm font-semibold text-foreground">
+                  {path.name}
+                </h3>
+                <span class="cat-accent cat-accent-bg rounded-full px-2 py-0.5 text-[0.6875rem] font-medium">
+                  {path.level}
+                </span>
+              </div>
+              <p class="mt-2 flex-1 text-sm text-muted">{path.summary}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <script>
+    // Ctrl/Cmd + K focuses the first visible search field (dependency-free).
+    document.addEventListener('keydown', (event) => {
+      const isShortcut =
+        (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
+      if (!isShortcut) return;
+
+      for (const element of document.querySelectorAll('[data-search-input]')) {
+        if (element instanceof HTMLInputElement && element.offsetParent !== null) {
+          event.preventDefault();
+          element.focus();
+          element.select();
+          return;
+        }
+      }
+    });
+  </script>
+</BaseLayout>
