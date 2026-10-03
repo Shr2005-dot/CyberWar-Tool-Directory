@@ -1,0 +1,101 @@
+---
+import { footerNav, site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-20 border-t border-border bg-surface">
+  <div class="mx-auto w-full max-w-[90rem] px-4 py-12 sm:px-6 lg:px-8">
+    <!-- Educational-use notice (README.md) — shown on every page. -->
+    <div class="mb-10 rounded-xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
+      <p class="flex items-start gap-3 text-sm leading-relaxed text-muted">
+        <span aria-hidden="true" class="text-base leading-none">⚠️</span>
+        <span>
+          <span class="font-semibold text-warning">Educational use only.</span>
+          {site.disclaimer}
+          Always obtain explicit, written authorization before testing any
+          system you do not own or operate, and follow the terms of service of
+          every platform you use.
+        </span>
+      </p>
+    </div>
+
+    <div class="grid gap-10 lg:grid-cols-[1.5fr_repeat(3,minmax(0,1fr))]">
+      <div>
+        <a href="/" class="inline-flex items-center gap-2.5">
+          <span
+            class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5 text-accent"
+            >
+              <path d="M12 3 5 6v6c0 4.2 2.9 7.6 7 9 4.1-1.4 7-4.8 7-9V6l-7-3Z"></path>
+              <path d="m9.5 12 1.8 1.8L15 10"></path>
+            </svg>
+          </span>
+          <span class="flex flex-col leading-none">
+            <span class="text-sm font-semibold tracking-tight text-foreground">
+              {site.shortName}
+            </span>
+            <span class="text-[0.6875rem] font-medium tracking-wide text-subtle">
+              Tool Directory
+            </span>
+          </span>
+        </a>
+        <p class="mt-4 max-w-xs text-sm text-muted">{site.taglineDetail}</p>
+        <p class="mt-4 text-xs text-subtle">
+          Licensed under
+          <a
+            href={site.licenseUrl}
+            class="text-accent transition hover:underline"
+            target="_blank"
+            rel="noopener noreferrer">{site.license}</a
+          >.
+        </p>
+      </div>
+
+      {
+        footerNav.map((group) => (
+          <nav aria-label={group.title}>
+            <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-subtle">
+              {group.title}
+            </h2>
+            <ul class="flex flex-col gap-2">
+              {group.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    {...link.external
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : {}}
+                    class="text-sm text-muted transition hover:text-foreground"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-10 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="text-xs text-subtle">
+        © {year} {site.name}. All rights reserved.
+      </p>
+      <p class="text-xs text-subtle">
+        Built with Astro. Not affiliated with the tools listed.
+      </p>
+    </div>
+  </div>
+</footer>

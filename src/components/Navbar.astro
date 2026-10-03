@@ -1,0 +1,298 @@
+---
+import { primaryNav, categories, site } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string): boolean =>
+  href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
+---
+
+<header class="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
+  <div
+    class="mx-auto flex h-16 w-full max-w-[90rem] items-center gap-3 px-4 sm:px-6 lg:px-8"
+  >
+    <!-- Mobile menu trigger -->
+    <button
+      id="nav-open"
+      type="button"
+      class="-ml-2 inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted transition hover:bg-elevated hover:text-foreground lg:hidden"
+      aria-controls="mobile-nav"
+      aria-expanded="false"
+      aria-label="Open navigation menu"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        class="h-6 w-6"
+      >
+        <path d="M4 7h16M4 12h16M4 17h16"></path>
+      </svg>
+    </button>
+
+    <!-- Brand -->
+    <a href="/" class="flex shrink-0 items-center gap-2.5">
+      <span
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-5 w-5 text-accent"
+        >
+          <path d="M12 3 5 6v6c0 4.2 2.9 7.6 7 9 4.1-1.4 7-4.8 7-9V6l-7-3Z"></path>
+          <path d="m9.5 12 1.8 1.8L15 10"></path>
+        </svg>
+      </span>
+      <span class="flex flex-col leading-none">
+        <span class="text-sm font-semibold tracking-tight text-foreground">
+          {site.shortName}
+        </span>
+        <span class="text-[0.6875rem] font-medium tracking-wide text-subtle">
+          Tool Directory
+        </span>
+      </span>
+    </a>
+
+    <!-- Primary navigation (desktop) -->
+    <nav aria-label="Primary" class="hidden lg:block">
+      <ul class="flex items-center gap-0.5">
+        {
+          primaryNav.map((item) => (
+            <li class="group relative">
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class:list={[
+                  'inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition',
+                  isActive(item.href)
+                    ? 'text-accent'
+                    : 'text-muted hover:bg-elevated hover:text-foreground',
+                ]}
+              >
+                {item.label}
+                {item.href === '/tools' && (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-3.5 w-3.5 opacity-70"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                )}
+              </a>
+
+              {item.href === '/tools' && (
+                <div class="invisible absolute left-0 top-full z-40 w-[46rem] max-w-[calc(100vw-2rem)] pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <div class="rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/40">
+                    <ul class="grid grid-cols-2 gap-1">
+                      {categories.map((category) => (
+                        <li>
+                          <a
+                            href={`/tools/${category.slug}`}
+                            class="flex items-start gap-3 rounded-lg p-3 transition hover:bg-elevated"
+                          >
+                            <span
+                              class="cat-accent cat-accent-bg mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-sm"
+                              style={`--cat-accent:${category.accent}`}
+                              aria-hidden="true"
+                            >
+                              {category.glyph}
+                            </span>
+                            <span class="min-w-0">
+                              <span class="block text-sm font-medium text-foreground">
+                                {category.name}
+                              </span>
+                              <span class="block text-xs text-subtle">
+                                {category.description}
+                              </span>
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                      <li class="col-span-2 mt-1 border-t border-border pt-2">
+                        <a
+                          href="/tools"
+                          class="flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-accent transition hover:bg-elevated"
+                        >
+                          <span>Browse all tools</span>
+                          <span aria-hidden="true">→</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Search + repository link -->
+    <div class="ml-auto flex items-center gap-1.5">
+      <form role="search" action="/tools" method="get" class="relative hidden md:block">
+        <label for="nav-search" class="sr-only">
+          Search tools, commands and topics
+        </label>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          class="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle"
+        >
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <input
+          id="nav-search"
+          data-search-input
+          type="search"
+          name="q"
+          placeholder="Search tools, commands…"
+          autocomplete="off"
+          class="h-9 w-48 rounded-lg border border-border bg-surface pl-8 pr-3 text-sm text-foreground transition placeholder:text-subtle focus:border-accent focus:outline-none xl:w-64"
+        />
+      </form>
+
+      <a
+        href={site.repoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-2.5 text-sm font-medium text-muted transition hover:bg-elevated hover:text-foreground"
+      >
+        <svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+          ></path>
+        </svg>
+        <span class="hidden xl:inline">GitHub</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile navigation drawer -->
+  <div id="mobile-nav" class="hidden border-t border-border bg-surface lg:hidden">
+    <div class="max-h-[calc(100vh-4rem)] overflow-y-auto px-4 pb-8 pt-4 sm:px-6">
+      <form role="search" action="/tools" method="get" class="relative mb-4">
+        <label for="mobile-search" class="sr-only">
+          Search tools, commands and topics
+        </label>
+        <input
+          id="mobile-search"
+          type="search"
+          name="q"
+          placeholder="Search tools, commands…"
+          autocomplete="off"
+          class="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-subtle focus:border-accent focus:outline-none"
+        />
+      </form>
+
+      <nav aria-label="Mobile" class="mb-4 flex flex-col">
+        {
+          primaryNav.map((item) => (
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'rounded-lg px-3 py-2.5 text-sm font-medium transition',
+                isActive(item.href)
+                  ? 'text-accent'
+                  : 'text-muted hover:bg-elevated hover:text-foreground',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <p class="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-subtle">
+        Categories
+      </p>
+      <div class="flex flex-col">
+        {
+          categories.map((category) => (
+            <details class="disclosure border-b border-border last:border-b-0">
+              <summary class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted transition hover:text-foreground">
+                <span
+                  class="cat-accent cat-accent-bg inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs"
+                  style={`--cat-accent:${category.accent}`}
+                  aria-hidden="true"
+                >
+                  {category.glyph}
+                </span>
+                <span class="flex-1 font-medium">{category.name}</span>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="disclosure-icon h-4 w-4 text-subtle"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </summary>
+              <div class="pb-2 pl-12">
+                {category.subcategories.map((sub) => (
+                  <a
+                    href={`/tools/${category.slug}/${sub.slug}`}
+                    class="block rounded-md px-2 py-1.5 text-sm text-muted transition hover:bg-elevated hover:text-foreground"
+                  >
+                    {sub.name}
+                  </a>
+                ))}
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Mobile navigation drawer (progressive enhancement: the drawer is
+  // hidden by default and only toggled when JavaScript is available).
+  const navOpenButton = document.getElementById('nav-open');
+  const navDrawer = document.getElementById('mobile-nav');
+
+  function setNavOpen(open: boolean): void {
+    if (!navOpenButton || !navDrawer) return;
+    navDrawer.classList.toggle('hidden', !open);
+    navOpenButton.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  navOpenButton?.addEventListener('click', () => {
+    setNavOpen(navDrawer?.classList.contains('hidden') ?? false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setNavOpen(false);
+  });
+
+  navDrawer?.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('a')) {
+      setNavOpen(false);
+    }
+  });
+</script>
